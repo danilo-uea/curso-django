@@ -1,3 +1,5 @@
+# from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import render
 
 from recipes.models import Recipe
@@ -17,15 +19,19 @@ def category(request, category_id):
         is_published=True,
     ).order_by('-id')
 
-    category_name = getattr(
-        getattr(recipes.first(), 'category', None),
-        'name',
-        'Not found'
-    )
+    # category_name = getattr(
+    #     getattr(recipes.first(), 'category', None),
+    #     'name',
+    #     'Not found'
+    # )
+
+    if not recipes:
+        raise Http404('Not found')
+        # return HttpResponse(content='Not Found', status=404)
 
     return render(request, 'recipes/pages/category.html', context={
         'recipes': recipes,
-        'title': f'{category_name} - Category | '
+        'title': f'{recipes.first().category.name} - Category | '
     })
 
 
