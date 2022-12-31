@@ -16,8 +16,16 @@ def category(request, category_id):
         category__id=category_id,
         is_published=True,
     ).order_by('-id')
+
+    category_name = getattr(
+        getattr(recipes.first(), 'category', None),
+        'name',
+        'Not found'
+    )
+
     return render(request, 'recipes/pages/category.html', context={
         'recipes': recipes,
+        'title': f'{category_name} - Category | '
     })
 
 
